@@ -1,4 +1,4 @@
-import type { CollectionConfig} from 'payload'
+import type { CollectionConfig } from 'payload'
 
 export const Vowels: CollectionConfig = {
   slug: 'vowel',
@@ -15,6 +15,6 @@ export const Vowels: CollectionConfig = {
       type: 'text',
       required: true,
       name: 'value',
-    }
-  ]
+    },
+  ],
 }

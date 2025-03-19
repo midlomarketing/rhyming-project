@@ -20,9 +20,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     autoLogin: {
-      username: 'nick@midlowebdesign.com',
+      email: 'nick@midlowebdesign.com',
       password: 'test',
-    }
+    },
+    suppressHydrationWarning: true
   },
   collections: [Users, Media, Words, Vowels],
   editor: lexicalEditor(),

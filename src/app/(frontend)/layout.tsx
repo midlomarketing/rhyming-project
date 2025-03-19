@@ -1,9 +1,8 @@
 import React from 'react'
 import './styles.css'
 
-// TODO add a few words of varying length and pronunciations
-// TODO add those words to the front end
-// TODO determine layout of the front end - table, or flex chips
+// TODO Handle pronunciation groups, syllable groups, and pagination
+// TODO handle when word isn't found: definition for word, and add word? form
 // TODO add filters and pagination on our pages
 // TODO replace metadata
 // TODO add plugins: SEO, Redirects, Search
