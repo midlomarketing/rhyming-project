@@ -23,6 +23,7 @@
     "@tailwindcss/postcss": "^4.0.13",
     "cross-env": "^7.0.3",
     "graphql": "^16.8.1",
+    "lucide-react": "^0.483.0",
     "next": "15.2.2",
     "payload": "latest",
     "postcss": "^8.5.3",

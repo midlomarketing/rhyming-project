@@ -1,12 +1,17 @@
 import React from 'react'
 import './styles.css'
 
-// TODO Handle pronunciation groups, syllable groups, and pagination
+// TODO how to add a column representing another pronunciation?
+// TODO sort by which syllable it rhymes on
+// TODO clear type errors
 // TODO handle when word isn't found: definition for word, and add word? form
-// TODO add filters and pagination on our pages
-// TODO replace metadata
-// TODO add plugins: SEO, Redirects, Search
+//// TODO use https://dictionaryapi.dev for definitions
+// TODO Exclude homonymous words
+// TODO add thesaurus section using datamuse
 // TODO add auth, for customers and for admin
+// TODO replace metadata
+// TODO add plugins: SEO, Search
+
 
 
 

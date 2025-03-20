@@ -180,6 +180,8 @@ export interface Vowel {
   id: string;
   label: string;
   value: string;
+  title?: string | null;
+  update?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -311,6 +313,8 @@ export interface WordSelect<T extends boolean = true> {
 export interface VowelSelect<T extends boolean = true> {
   label?: T;
   value?: T;
+  title?: T;
+  update?: T;
   updatedAt?: T;
   createdAt?: T;
 }

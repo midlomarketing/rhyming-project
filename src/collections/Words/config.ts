@@ -5,6 +5,10 @@ export const Words: CollectionConfig = {
   slug: 'word',
   admin: {
     useAsTitle: 'word',
+    pagination: {
+      defaultLimit: 0,
+      limits: [0, 10, 50]
+    }
   },
   fields: [
     {
