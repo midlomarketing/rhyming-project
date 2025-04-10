@@ -46,6 +46,7 @@ export const Words: CollectionConfig = {
               type: 'relationship',
               name: 'homonyms',
               relationTo: 'word',
+              hasMany: true,
             },
             {
               type: 'array',

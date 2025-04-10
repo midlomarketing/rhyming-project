@@ -1,36 +1,45 @@
 import { getPayload } from 'payload'
-import configPromise from '@payload-config'
-import { Vowel, Word } from '@/payload-types'
+import config from '@payload-config'
+import type { Word } from '@/payload-types'
 import Link from 'next/link'
 
-export const WordCell = async ({ word, vowelSound, syllable, className }: { word: Word; vowelSound: Vowel, syllable: number, className?: string }) => {
-  const { slug } = word
+export const WordCell = async ({
+  vowelSound,
+  targetWord,
+}: {
+  vowelSound: string
+  targetWord: Word
+}) => {
+  const payload = await getPayload({ config })
+  const homonyms = targetWord.homonyms?.map(( word ) => typeof word !== 'string' && word.word)
 
-  const payload = await getPayload({ config: configPromise })
-
-  const getNewWord = await payload
+  const rhyme = await payload
     .find({
       collection: 'word',
       where: {
-        'pronunciations.lastVowel': {
-          equals: vowelSound.value,
+        word: {
+          not_equals: targetWord.word,
+          not_in: homonyms
         },
-        slug: {
-          not_equals: slug,
+        'pronunciations.lastVowel': {
+          equals: vowelSound,
         },
       },
+      limit: 0,
     })
     .then((res) => res.docs)
 
-  return getNewWord.map((word, i, arr) => (
-    <tr key={i} className={`border border-violet-950 text-center even:bg-purple-50`}>
-      <td className={`p-2`}>
-        <Link className={`border border-violet-950 text-violet-950 px-4 py-1 m-0 rounded-full hover:text-violet-50 hover:bg-violet-950 transition duration-200 hover:transition hover:duration-200`} href={`/word/${word.slug}`}>{word.word}</Link>
-      </td>
-      <td>{syllable}</td>
-      <td>
-
-      </td>
-    </tr>
-  ))
+  return (
+    rhyme.length > 0 ? <div className={`flex flex-wrap my-4 gap-2 justify-start text-violet-950 dark:text-violet-200`}>
+      {rhyme.map(({ word, slug, id }) => (
+        <Link
+          className={`chips`}
+          href={`/word/${slug}`}
+          key={id}
+        >
+          {word}
+        </Link>
+      ))}
+    </div> : <p className={`text-md py-0 my-2`}>No words found</p>
+  )
 }

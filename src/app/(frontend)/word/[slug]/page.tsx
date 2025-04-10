@@ -1,143 +1,186 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import Link from 'next/link'
-import { MoveLeft, MoveRight } from 'lucide-react'
+import { SyllableBox } from '@/app/(frontend)/components/SyllableBox'
+import { Vowel } from '@/payload-types'
+import { WordCell } from '@/app/(frontend)/components/WordCell'
+import React, { cache } from 'react'
+import { PronunciationBox } from '@/app/(frontend)/components/PronunciationBox'
+import { Metadata } from 'next'
+import { meta } from '@/app/(frontend)/components/Metadata'
 
 type Args = {
   params: Promise<{
     slug?: string
   }>
-  searchParams: Promise<{
-    [key: string]: string | string[]
-  }>
 }
 
-export default async function Word({ params: paramsPromise, searchParams }: Args) {
+export default async function Word({ params: paramsPromise }: Args) {
   const { slug } = await paramsPromise
-  const search = await searchParams
-
-  const page = Number(search.p) || 1
-
   const payload = await getPayload({ config: configPromise })
 
-  const targetWord = await payload
+  const targetWord = await queryWordBySlug({ slug: slug || `` })
+
+  const definitions = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${slug}`).then(
+    (res) => res.json(),
+  )
+
+  return (
+    <main className={`text-violet-950 dark:text-violet-50`}>
+      <div className={`m-4`}>
+        <div className={`p-4`}>
+          {targetWord ? (
+            <>
+              <h1 className={`dark:text-violet-200`}>
+                Words that share vowel sounds with{' '}
+                <span
+                  className={`
+                  bg-gradient-to-br from-violet-950 to-violet-400
+                  dark:bg-gradient-to-tr dark:from-violet-500 dark:to-violet-200 
+                  bg-clip-text text-transparent font-extrabold leading-normal
+                  `}
+                >
+                  {targetWord.word}
+                </span>
+              </h1>
+              <div>
+                <div className={`mt-8`}>
+                  {targetWord.pronunciations.map(({ syllables }, index, arr) => (
+                    <PronunciationBox
+                      key={index}
+                      index={index}
+                      length={arr.length}
+                      targetWord={targetWord}
+                    >
+                      {syllables.reverse().map((syllable, j, arr) => (
+                        <SyllableBox
+                          syllable={syllable as Vowel}
+                          key={syllable.id}
+                          length={arr.length}
+                          targetWord={targetWord}
+                          index={j}
+                        >
+                          <div>
+                            {syllable?.vowelSounds && typeof syllable.vowelSounds !== 'string' && (
+                              <WordCell
+                                targetWord={targetWord}
+                                vowelSound={syllable.vowelSounds.value}
+                              />
+                            )}
+                          </div>
+                        </SyllableBox>
+                      ))}
+                    </PronunciationBox>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1>
+                No matches were found for {''}
+                <span
+                  className={`
+                  bg-gradient-to-br from-violet-950 to-violet-400
+                  dark:bg-gradient-to-tr dark:from-violet-500 dark:to-violet-200 
+                  bg-clip-text text-transparent font-extrabold leading-normal
+                  `}
+                >
+                  {slug}
+                </span>
+              </h1>
+              <p>If you think we should have this word. Contact us.</p>
+            </>
+          )}
+          {definitions.length > 0 && (
+            <div className={`mt-8`}>
+              <h2>
+                Definitions for{' '}
+                <span
+                  className={`
+                  bg-gradient-to-br from-violet-950 to-violet-400
+                  dark:bg-gradient-to-tr dark:from-violet-500 dark:to-violet-200 
+                  bg-clip-text text-transparent font-extrabold leading-normal
+                  `}
+                >
+                  {targetWord?.word || slug}
+                </span>
+              </h2>
+              <div>
+                {definitions.map(
+                  (
+                    { meanings }: { meanings: { definitions: { definition: string }[] }[] },
+                    index: number,
+                  ) => (
+                    <div
+                      key={index}
+                      className={`p-4 border bg-violet-100/60 dark:bg-violet-500/30 rounded-md my-4 shadow`}
+                    >
+                      <h3>Definition {index + 1}: </h3>
+                      {meanings[0].definitions[0].definition}
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          )}
+          {definitions[0].meanings[0].synonyms.length > 0 && (
+            <div className={`mt-8`}>
+              <h2>
+                Synonyms for{' '}
+                <span
+                  className={`
+                  bg-gradient-to-br from-violet-950 to-violet-400
+                  dark:bg-gradient-to-tr dark:from-violet-500 dark:to-violet-200 
+                  bg-clip-text text-transparent font-extrabold leading-normal
+                  `}
+                >
+                  {targetWord?.word || slug}
+                </span>
+              </h2>
+              <div className={`flex flex-wrap my-4 gap-2 justify-start`}>
+                {definitions[0].meanings[0].synonyms.map((synonym: string, index: number) => (
+                  <Link className={`chips`} href={`/word/${synonym.toLowerCase()}`} key={index}>
+                    {synonym}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  )
+}
+
+export async function generateMetadata({ params: paramPromise }: Args): Promise<Metadata> {
+  const slug = (await paramPromise).slug
+
+  const word = await queryWordBySlug({ slug: slug || `` })
+
+  if (word) {
+    return meta({ doc: word })
+  } else {
+    return {
+      title: `Rhymes for ${slug} | Rhymes Rhyming Dictionary`,
+      description: `These words share a vowel sound with ${slug}`,
+    }
+  }
+}
+
+const queryWordBySlug = cache(async ({ slug }: { slug: string }) => {
+  const payload = await getPayload({ config: configPromise })
+  return await payload
     .find({
       collection: 'word',
+      limit: 1,
+      depth: 1,
+      overrideAccess: true,
       where: {
         slug: {
           equals: slug,
         },
       },
     })
-    .then((res) => res.docs[0])
-
-  const lastVowel = targetWord.pronunciations[targetWord.pronunciations.length - 1].lastVowel
-
-  const vowelArray = targetWord.pronunciations
-    .map((p) => p.syllables.map((s) => typeof s.vowelSounds !== 'string' && s.vowelSounds?.value))
-    .reduce((s) => s)
-
-  let syllableLookup = {}
-
-  vowelArray.map((vowel, i) => (syllableLookup[vowel] = i))
-
-  const rhymes = await payload.find({
-    collection: 'word',
-    where: {
-      word: {
-        not_equals: targetWord.word,
-      },
-      'pronunciations.lastVowel': {
-        in: vowelArray,
-      },
-    },
-    limit: 3,
-    page: Number(search.p) || 1,
-  })
-
-  return (
-    <main>
-      <div className={`m-4`}>
-        <div className={`p-4`}>
-          <h1>
-            Rhymes for:{' '}
-            <span
-              className={`bg-gradient-to-br from-violet-950 to-violet-400 bg-clip-text text-transparent font-extrabold leading-normal`}
-            >
-              {targetWord.word}
-            </span>
-          </h1>
-          {targetWord.pronunciations.length > 1 && (
-            <p>{targetWord.word} has more than one pronunciation reflected below.</p>
-          )}
-          <div>
-            <div className={`flex flex-wrap mt-4 gap-1 justify-center`}>
-              {/*{rhymes.docs.map((word) => (*/}
-              {/*  <Link*/}
-              {/*    className={`border border-violet-950 text-violet-950 px-4 py-1 m-0 rounded-full hover:text-violet-50 hover:bg-violet-950 transition duration-200 hover:transition hover:duration-200`}*/}
-              {/*    key={word.word}*/}
-              {/*    href={`/word/${word.slug}`}*/}
-              {/*  >*/}
-              {/*    {word.word}{' '}*/}
-              {/*    {syllableLookup[word.pronunciations.map((p) => p.lastVowel).join(', ')] + 1}*/}
-              {/*  </Link>*/}
-              {/*))}*/}
-              <table>
-                <thead>
-                  <tr>
-                    <th className={'p-2'}>Word</th>
-                    <th className={'p-2'}>Rhymes on Syllable</th>
-                    {/*<th className={'p-2'}>Alternate Pronunciation</th>*/}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rhymes.docs.map((word) => (
-                    <tr
-                      key={word.id}
-                      className={`border border-violet-950 text-center even:bg-purple-50`}
-                    >
-                      <td className={`p-2`}>
-                        <Link
-                          className={`border border-violet-950 text-violet-950 px-4 py-1 m-0 rounded-full hover:text-violet-50 hover:bg-violet-950 transition duration-200 hover:transition hover:duration-200`}
-                          key={word.word}
-                          href={`/word/${word.slug}`}
-                        >
-                          {word.word}
-                        </Link>
-                      </td>
-                      <td className={`p-2`}>
-                        {syllableLookup[word.pronunciations.map((p) => p.lastVowel).join(', ')] + 1}
-                      </td>
-                      {/*<td>{targetWord.pronunciations.length > 1 ? 'Y' : 'N'}</td>*/}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {rhymes.totalPages > 1 &&
-              <div className={`flex flex-wrap justify-center items-center gap-4 mt-4 w-full text-violet-950`}>
-                <Link
-                  className={page - 1 < 1 ? 'pointer-events-none text-violet-950/30' : ''}
-                  href={`/word/${targetWord.slug}?p=${page - 1}`}
-                >
-                  <MoveLeft height={30} width={30} />
-                </Link>
-
-                <p>Page {page} of {rhymes.totalPages}</p>
-
-                <Link
-                  className={
-                    page + 1 > rhymes.totalPages ? 'pointer-events-none text-violet-950/30' : ''
-                  }
-                  href={`/word/${targetWord.slug}?p=${page + 1}`}
-                >
-                  <MoveRight height={30} width={30} />
-                </Link>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    </main>
-  )
-}
+    .then((res) => res.docs[0] || null)
+})

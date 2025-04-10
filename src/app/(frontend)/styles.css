@@ -10,9 +10,25 @@
     font-weight: 700;
   }
   h2 {
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
   }
   h3 {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
+    font-weight: 600;
   }
+}
+
+.chips {
+  @apply border border-violet-950 dark:border-violet-200 dark:text-violet-200  dark:border-2 text-violet-950 px-2 py-0 m-0 rounded-full hover:text-violet-50 hover:bg-violet-950 transition duration-200 hover:transition hover:duration-200;
+}
+
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
 }

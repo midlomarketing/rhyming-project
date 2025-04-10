@@ -1,31 +1,26 @@
 import React from 'react'
 import './styles.css'
+import { NavBar } from './components/Nav/NavBar'
 
-// TODO how to add a column representing another pronunciation?
-// TODO sort by which syllable it rhymes on
-// TODO clear type errors
-// TODO handle when word isn't found: definition for word, and add word? form
-//// TODO use https://dictionaryapi.dev for definitions
-// TODO Exclude homonymous words
-// TODO add thesaurus section using datamuse
+// TODO add plugins: Form
+// TODO contact form for adding new words and general questions
+// TODO How to get vowel matches like SHAdow and BAttle (right now I don’t think it’s going to show up like this)
+
 // TODO add auth, for customers and for admin
-// TODO replace metadata
-// TODO add plugins: SEO, Search
-
-
-
+//// TODO add a way to add favorite words to account
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: 'Rhymes Rhyming Dictionary of Rhymes. Find interesting rhymes here.',
+  title: 'Rhymes Rhyming Dictionary',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
 
   return (
-    <html lang="en">
+    <html lang="en" className={`dark:bg-violet-950 bg-violet-50/50`}>
       <body>
+      <NavBar />
         <main>{children}</main>
       </body>
     </html>

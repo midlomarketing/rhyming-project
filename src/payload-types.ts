@@ -54,6 +54,7 @@ export type SupportedTimezones =
   | 'Asia/Singapore'
   | 'Asia/Tokyo'
   | 'Asia/Seoul'
+  | 'Australia/Brisbane'
   | 'Australia/Sydney'
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
@@ -70,6 +71,7 @@ export interface Config {
     media: Media;
     word: Word;
     vowel: Vowel;
+    search: Search;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -80,6 +82,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     word: WordSelect<false> | WordSelect<true>;
     vowel: VowelSelect<false> | VowelSelect<true>;
+    search: SearchSelect<false> | SearchSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -160,7 +163,7 @@ export interface Word {
   id: string;
   word: string;
   slug: string;
-  homonyms?: (string | null) | Word;
+  homonyms?: (string | Word)[] | null;
   pronunciations: {
     lastVowel?: string | null;
     syllables: {
@@ -169,6 +172,11 @@ export interface Word {
     }[];
     id?: string | null;
   }[];
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    siteName?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -182,6 +190,24 @@ export interface Vowel {
   value: string;
   title?: string | null;
   update?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This is a collection of automatically created search results. These results are used by the global site search and will be updated automatically as documents in the CMS are created or updated.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search".
+ */
+export interface Search {
+  id: string;
+  title?: string | null;
+  priority?: number | null;
+  doc: {
+    relationTo: 'word';
+    value: string | Word;
+  };
+  slug?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -207,6 +233,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'vowel';
         value: string | Vowel;
+      } | null)
+    | ({
+        relationTo: 'search';
+        value: string | Search;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -303,6 +333,13 @@ export interface WordSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        siteName?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -315,6 +352,18 @@ export interface VowelSelect<T extends boolean = true> {
   value?: T;
   title?: T;
   update?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search_select".
+ */
+export interface SearchSelect<T extends boolean = true> {
+  title?: T;
+  priority?: T;
+  doc?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }
