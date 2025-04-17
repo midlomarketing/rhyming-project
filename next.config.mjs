@@ -3,7 +3,9 @@ import { withPayload } from '@payloadcms/next/withPayload'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    turbo: true,
+    turbo: {
+      enabled: process.env.NODE_ENV !== 'production',
+    },
   }
 }
 

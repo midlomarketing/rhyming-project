@@ -8,6 +8,7 @@ import React, { cache } from 'react'
 import { PronunciationBox } from '@/app/(frontend)/components/PronunciationBox'
 import { Metadata } from 'next'
 import { meta } from '@/app/(frontend)/components/Metadata'
+import { FormBlock } from '@/blocks/Form/Component'
 
 type Args = {
   params: Promise<{

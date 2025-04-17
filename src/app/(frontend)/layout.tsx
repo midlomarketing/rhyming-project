@@ -2,8 +2,8 @@ import React from 'react'
 import './styles.css'
 import { NavBar } from './components/Nav/NavBar'
 
-// TODO add plugins: Form
-// TODO contact form for adding new words and general questions
+// TODO contact form for adding new words – add form to words collection
+// TODO style contact form, handle width of 50% in fields
 // TODO How to get vowel matches like SHAdow and BAttle (right now I don’t think it’s going to show up like this)
 
 // TODO add auth, for customers and for admin
