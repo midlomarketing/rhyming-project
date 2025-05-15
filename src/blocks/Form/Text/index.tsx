@@ -14,6 +14,8 @@ export const Text: React.FC<
     register: UseFormRegister<FieldValues>
   }
 > = ({ name, defaultValue, errors, label, register, required, width }) => {
+
+
   return (
     <Width width={width}>
       <Label htmlFor={name}>

@@ -1,14 +1,16 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import type { Word } from '@/payload-types'
+import type { Vowel, Word } from '@/payload-types'
 import Link from 'next/link'
 
 export const WordCell = async ({
   vowelSound,
   targetWord,
+  syllable,
 }: {
   vowelSound: string
   targetWord: Word
+  syllable: Vowel
 }) => {
   const payload = await getPayload({ config })
   const homonyms = targetWord.homonyms?.map(( word ) => typeof word !== 'string' && word.word)
@@ -19,11 +21,20 @@ export const WordCell = async ({
       where: {
         word: {
           not_equals: targetWord.word,
-          not_in: homonyms
+          not_in: homonyms,
         },
-        'pronunciations.lastVowel': {
-          equals: vowelSound,
-        },
+        or: [
+          {
+            'pronunciations.lastVowel': {
+              equals: vowelSound,
+            },
+          },
+          {
+            'pronunciations.syllables.vowelSounds': {
+              contains: syllable
+            }
+          }
+        ],
       },
       limit: 0,
     })

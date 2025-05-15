@@ -7,7 +7,7 @@ export const meta = async (args: { doc: Word }): Promise<Metadata> => {
   const meta = doc?.meta
 
   return {
-    title: meta?.title || 'MidloMark Boilerplate',
+    title: meta?.title || 'Rhymes Rhyming Dictionary',
     description: meta?.description || '',
     metadataBase: new URL(`http://localhost:3000`),
     openGraph: {

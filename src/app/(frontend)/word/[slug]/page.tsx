@@ -8,7 +8,7 @@ import React, { cache } from 'react'
 import { PronunciationBox } from '@/app/(frontend)/components/PronunciationBox'
 import { Metadata } from 'next'
 import { meta } from '@/app/(frontend)/components/Metadata'
-import { FormBlock } from '@/blocks/Form/Component'
+import { RequestForm } from '@/components/RequestForm/Component'
 
 type Args = {
   params: Promise<{
@@ -18,7 +18,6 @@ type Args = {
 
 export default async function Word({ params: paramsPromise }: Args) {
   const { slug } = await paramsPromise
-  const payload = await getPayload({ config: configPromise })
 
   const targetWord = await queryWordBySlug({ slug: slug || `` })
 
@@ -64,6 +63,7 @@ export default async function Word({ params: paramsPromise }: Args) {
                           <div>
                             {syllable?.vowelSounds && typeof syllable.vowelSounds !== 'string' && (
                               <WordCell
+                                syllable={syllable.vowelSounds}
                                 targetWord={targetWord}
                                 vowelSound={syllable.vowelSounds.value}
                               />
@@ -91,6 +91,7 @@ export default async function Word({ params: paramsPromise }: Args) {
                 </span>
               </h1>
               <p>If you think we should have this word. Contact us.</p>
+              <RequestForm />
             </>
           )}
           {definitions.length > 0 && (

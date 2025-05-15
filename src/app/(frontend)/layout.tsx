@@ -2,9 +2,11 @@ import React from 'react'
 import './styles.css'
 import { NavBar } from './components/Nav/NavBar'
 
-// TODO contact form for adding new words – add form to words collection
-// TODO style contact form, handle width of 50% in fields
-// TODO How to get vowel matches like SHAdow and BAttle (right now I don’t think it’s going to show up like this)
+// TODO add form functionality for adding a new word
+//// TODO use server action to write form submission to database /api/form-submissions collection
+//// TODO make sure email is sent to admin and submitter
+//// TODO use sonner Toast for success and error messages
+// TODO experiment with motion (Framer Motion)
 
 // TODO add auth, for customers and for admin
 //// TODO add a way to add favorite words to account

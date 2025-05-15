@@ -21,10 +21,10 @@ export const NavBar = () => {
       <div className={`flex items-center justify-between gap-4 pt-2`}>
         <Link className={`dark:text-violet-50`} href={`/`}>Logo</Link>
         <div className={`flex items-center gap-4`}>
-          <Link className={`px-2 py-1 rounded-md bg-emerald-700 text-violet-50`} href={'/'}>
+          <Link className={`px-2 py-1 rounded-md bg-amber-700 text-violet-50`} href={'/'}>
             Home
           </Link>
-          <Link className={`px-2 py-1 rounded-md bg-emerald-700 text-violet-50`} href={'/contact'}>
+          <Link className={`px-2 py-1 rounded-md bg-amber-700 text-violet-50`} href={'/contact'}>
             Contact
           </Link>
           <Link className={`px-2 py-1`} href={'/search'}>

@@ -24,7 +24,7 @@ const buttonVariants = cva(
         ghost: 'hover:bg-card hover:text-accent-foreground',
         link: 'text-violet-950 items-start justify-start underline-offset-4 hover:underline',
         outline: 'border border-border bg-background hover:bg-card hover:text-accent-foreground',
-        secondary: 'bg-emerald-950 text-emerald-50 hover:bg-emerald-950/80',
+        secondary: 'bg-amber-950 text-amber-50 hover:bg-amber-950/80',
       },
     },
   },
