@@ -9,6 +9,7 @@ import { PronunciationBox } from '@/app/(frontend)/components/PronunciationBox'
 import { Metadata } from 'next'
 import { meta } from '@/app/(frontend)/components/Metadata'
 import { RequestForm } from '@/components/RequestForm/Component'
+import { toast } from 'sonner'
 
 type Args = {
   params: Promise<{
@@ -91,7 +92,7 @@ export default async function Word({ params: paramsPromise }: Args) {
                 </span>
               </h1>
               <p>If you think we should have this word. Contact us.</p>
-              <RequestForm />
+              <RequestForm defaultValue={slug} />
             </>
           )}
           {definitions.length > 0 && (

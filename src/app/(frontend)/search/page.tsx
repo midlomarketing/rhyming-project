@@ -69,7 +69,6 @@ export default async function Page({searchParams: searchParamsPromise}: Args) {
 
   return (
     <main className={`h-[calc(100vh-16rem)] ps-8 mt-4`}>
-    <h1>Search Results</h1>
       <div className={`flex gap-4 flex-col min-h-full justify-center items-center`}>
         <div>
           <div>

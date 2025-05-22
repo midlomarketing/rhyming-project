@@ -33,6 +33,7 @@
     "cross-env": "^7.0.3",
     "graphql": "^16.8.1",
     "lucide-react": "^0.483.0",
+    "motion": "^12.12.1",
     "next": "15.2.4",
     "payload": "^3.35.0",
     "postcss": "^8.5.3",
@@ -40,8 +41,10 @@
     "react-dom": "19.0.0",
     "react-hook-form": "^7.55.0",
     "sharp": "0.32.6",
+    "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",
-    "tailwindcss": "^4.0.13"
+    "tailwindcss": "^4.0.13",
+    "zod": "^3.25.20"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
