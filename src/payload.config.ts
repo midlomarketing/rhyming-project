@@ -15,6 +15,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { plugins } from '@/collections/plugins'
 import { Pages } from '@/collections/Pages/config'
 import { FormBlock } from '@/blocks/Form/config'
+import { Customers } from '@/collections/Customers/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -32,7 +33,7 @@ export default buildConfig({
     },
     suppressHydrationWarning: true,
   },
-  collections: [Users, Media, Words, Vowels, Pages],
+  collections: [Users, Media, Words, Vowels, Pages, Customers],
   blocks: [FormBlock],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

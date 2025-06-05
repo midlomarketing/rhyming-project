@@ -9,7 +9,9 @@ import { PronunciationBox } from '@/app/(frontend)/components/PronunciationBox'
 import { Metadata } from 'next'
 import { meta } from '@/app/(frontend)/components/Metadata'
 import { RequestForm } from '@/components/RequestForm/Component'
-import { toast } from 'sonner'
+import {Customer} from '@/payload-types'
+import { getUser } from '@/app/(frontend)/(auth)/actions/getUser'
+import { Star } from 'lucide-react'
 
 type Args = {
   params: Promise<{
@@ -19,8 +21,10 @@ type Args = {
 
 export default async function Word({ params: paramsPromise }: Args) {
   const { slug } = await paramsPromise
+  const user = await getUser() as Customer
 
   const targetWord = await queryWordBySlug({ slug: slug || `` })
+  const isFavorite = user.favorites?.includes(targetWord.word)
 
   const definitions = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${slug}`).then(
     (res) => res.json(),
@@ -32,7 +36,7 @@ export default async function Word({ params: paramsPromise }: Args) {
         <div className={`p-4`}>
           {targetWord ? (
             <>
-              <h1 className={`dark:text-violet-200`}>
+              <h1 className={`dark:text-violet-200 flex gap-2 items-center`}>
                 Words that share vowel sounds with{' '}
                 <span
                   className={`
@@ -43,6 +47,7 @@ export default async function Word({ params: paramsPromise }: Args) {
                 >
                   {targetWord.word}
                 </span>
+                <Star className={`h-8 w-8 ${!isFavorite ? 'stroke-amber-700' : 'fill-amber-700 stroke-none'}`} />
               </h1>
               <div>
                 <div className={`mt-8`}>
@@ -67,6 +72,7 @@ export default async function Word({ params: paramsPromise }: Args) {
                                 syllable={syllable.vowelSounds}
                                 targetWord={targetWord}
                                 vowelSound={syllable.vowelSounds.value}
+                                favorites={user.favorites!}
                               />
                             )}
                           </div>

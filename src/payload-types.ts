@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    customers: CustomerAuthOperations;
   };
   blocks: {
     formBlock: FormBlock;
@@ -74,6 +75,7 @@ export interface Config {
     word: Word;
     vowel: Vowel;
     pages: Page;
+    customers: Customer;
     forms: Form;
     'form-submissions': FormSubmission;
     search: Search;
@@ -88,6 +90,7 @@ export interface Config {
     word: WordSelect<false> | WordSelect<true>;
     vowel: VowelSelect<false> | VowelSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    customers: CustomersSelect<false> | CustomersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
@@ -101,15 +104,37 @@ export interface Config {
   globals: {};
   globalsSelect: {};
   locale: null;
-  user: User & {
-    collection: 'users';
-  };
+  user:
+    | (User & {
+        collection: 'users';
+      })
+    | (Customer & {
+        collection: 'customers';
+      });
   jobs: {
     tasks: unknown;
     workflows: unknown;
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface CustomerAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -374,6 +399,28 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customers".
+ */
+export interface Customer {
+  id: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  favorites?: string[] | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -436,6 +483,10 @@ export interface PayloadLockedDocument {
         value: string | Page;
       } | null)
     | ({
+        relationTo: 'customers';
+        value: string | Customer;
+      } | null)
+    | ({
         relationTo: 'forms';
         value: string | Form;
       } | null)
@@ -448,10 +499,15 @@ export interface PayloadLockedDocument {
         value: string | Search;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: string | User;
+      }
+    | {
+        relationTo: 'customers';
+        value: string | Customer;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -461,10 +517,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: string;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: string | User;
+      }
+    | {
+        relationTo: 'customers';
+        value: string | Customer;
+      };
   key?: string | null;
   value?:
     | {
@@ -581,6 +642,26 @@ export interface PagesSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customers_select".
+ */
+export interface CustomersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  favorites?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

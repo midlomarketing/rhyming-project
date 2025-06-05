@@ -1,13 +1,17 @@
 import Link from 'next/link'
 import { Search } from 'lucide-react'
+import { getUser } from '@/app/(frontend)/(auth)/actions/getUser'
+import { Customer } from '@/payload-types'
 
-export const NavBar = () => {
+export const NavBar = async () => {
+
+  const user = await getUser() as Customer
 
   return (
     <nav
       className={`flex flex-col justify-between px-4 py-2 border-b border-b-violet-950 dark:border-b-violet-500 sticky z-50 top-0 backdrop-blur-md bg-violet-100/60 dark:bg-violet-800/60`}
     >
-      <div className={`flex justify-end gap-2 pb-2 border-b border-b-violet-950/30 dark:border-b-violet-500`}>
+      {!user && <div className={`flex justify-end gap-2 pb-2 border-b border-b-violet-950/30 dark:border-b-violet-500`}>
         <Link className={`px-1 rounded-md bg-violet-950 text-violet-50 dark:text-violet-950 dark:bg-violet-50`} href={'/login'}>
           Login
         </Link>
@@ -17,7 +21,7 @@ export const NavBar = () => {
         >
           Sign Up
         </Link>
-      </div>
+      </div>}
       <div className={`flex items-center justify-between gap-4 pt-2`}>
         <Link className={`dark:text-violet-50`} href={`/`}>Logo</Link>
         <div className={`flex items-center gap-4`}>

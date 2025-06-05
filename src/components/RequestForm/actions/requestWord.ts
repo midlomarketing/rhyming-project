@@ -2,13 +2,8 @@
 
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { toast } from 'sonner'
 import { z } from 'zod'
 
-// interface Args {
-//   word: string
-//   email: string
-// }
 
 export interface Response {
   success: boolean
@@ -31,7 +26,7 @@ export const requestWord = async (
 ) => {
   const schema = z.object({
     email: z.string().email(),
-    word: z.string(),
+    word: z.string().min(2).max(20).regex(/[a-zA-Z]+/g, 'Only letters please').refine(s => !s.includes(' '), 'No spaces allowed'),
   })
   const parse = schema.safeParse({
     email: formData.get('email') as string,
@@ -58,11 +53,17 @@ export const requestWord = async (
         form: '68005853aabf23eeaf771f34',
       },
     })
-    return { message: `Requested word: ${data.word}`, submitted: true }
-    // return { status: { success: `Requested word: ${data.word}` } }
+    return {
+      message: `Requested word: ${data.word}`,
+      submitted: true,
+      status: { success: `Requested word: ${data.word}` }
+    }
   } catch (e) {
     console.log('Submission failed: ', e)
-    return { message: `Could not request ${data.word}`, submitted: false }
-    // return { status: { error: `Could not request ${data.word}` } }
+    return {
+      message: `Could not request "${data.word}"`,
+      submitted: false,
+      status: { error: `Could not request "${data.word}"`}
+    }
   }
 }

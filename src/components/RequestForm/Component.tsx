@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useActionState, useState } from 'react'
+import React, { useActionState, useEffect, useState } from 'react'
 import { requestWord } from '@/components/RequestForm/actions/requestWord'
 import { LoaderCircle } from 'lucide-react'
+import { toast } from 'sonner'
 
 type Props = {
   defaultValue?: string
@@ -15,6 +16,10 @@ export const RequestForm = (props: Props) => {
   const initialState = {
     message: '',
     submitted: false,
+    status: {
+      error: '',
+      success: undefined,
+    }
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +28,14 @@ export const RequestForm = (props: Props) => {
   }
 
   const [state, formAction, pending] = useActionState(requestWord, initialState)
+
+  useEffect(() => {
+    if (state.status.success) {
+      toast.success(state.status.success)
+    } else if (state.status.error && typeof state.message !== 'string') {
+      toast.error(state.message?.email || state.message?.word)
+    }
+  }, [state?.submitted, state.status])
 
   return !state.submitted ? (
     <form
@@ -46,7 +59,9 @@ export const RequestForm = (props: Props) => {
             placeholder={'Enter a word'}
             required={true}
             defaultValue={defaultValue || ''}
-          /></div>
+          />
+          <div className={`text-red-600 mt-2`}>{typeof state.message !== 'string' && state.message?.word && state.message?.word}</div>
+        </div>
         <div className={`col-span-12 sm:col-span-6`}><label className={`sr-only`} htmlFor={'email'}>
           Email
         </label>
@@ -68,7 +83,7 @@ export const RequestForm = (props: Props) => {
           type={'submit'}
           aria-disabled={pending}
         >
-          Request{value ? ` ${value}` : defaultValue && ` ${defaultValue}`}{' '}
+          Request{value ? ` "${value}"` : defaultValue && ` "${defaultValue}"`}{' '}
           <LoaderCircle className={`animate-spin ${pending ? 'block' : 'hidden'}`} />
         </button>
       </div>
