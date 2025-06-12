@@ -3,9 +3,12 @@ import './styles.css'
 import { NavBar } from './components/Nav/NavBar'
 import { Toaster } from 'sonner'
 
+// TODO explain shadcn working now (needed to change tailwind import) added table
 // TODO move user checks to page.tsx
 //// TODO check that user login/out is working after pnpm build
+// TODO explore multipage table?
 // TODO fix dark mode styles
+// TODO clean up project/unused code
 
 // TODO try modals
 //// TODO try creating an intercepting route for /search
