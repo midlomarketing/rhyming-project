@@ -4,7 +4,6 @@ import { addFavorite } from '@/app/(frontend)/word/actions/addFavorite'
 import { Star } from 'lucide-react'
 import { useActionState, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { useFormStatus } from 'react-dom'
 
 export const AddFavorite = ({ word }: { word: string }) => {
 
@@ -27,7 +26,7 @@ export const AddFavorite = ({ word }: { word: string }) => {
     <form action={formAction} className={'flex items-center'}>
       <button type={'submit'}>
       <Star
-        className={`h-5 w-5 stroke-amber-700`}
+        className={`h-5 w-5 stroke-amber-700 cursor-pointer`}
       /></button>
       <input type="hidden" name="word" value={word} />
     </form>

@@ -43,9 +43,10 @@ export const Customers: CollectionConfig = {
       ]
     },
     {
-      type: 'text',
+      type: 'relationship',
       name: 'favorites',
       hasMany: true,
+      relationTo: 'word',
     }
   ]
 }

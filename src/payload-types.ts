@@ -405,7 +405,7 @@ export interface Customer {
   id: string;
   firstName?: string | null;
   lastName?: string | null;
-  favorites?: string[] | null;
+  favorites?: (string | Word)[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;

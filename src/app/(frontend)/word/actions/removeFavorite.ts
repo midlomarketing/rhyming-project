@@ -3,7 +3,7 @@
 import {getPayload} from 'payload'
 import config from '@payload-config'
 import { getUser } from '@/app/(frontend)/(auth)/actions/getUser'
-import { Customer } from '@/payload-types'
+import { Customer, Word as WordProps } from '@/payload-types'
 import { revalidatePath } from 'next/cache'
 
 
@@ -18,6 +18,7 @@ export const removeFavorite = async (
 
   const user = await getUser() as Customer
   const word = formData.get('word') as string
+  const favorites = user.favorites as WordProps[]
 
   if (!user) {
     return {success: false, error: 'You must be logged in to remove a favorite'}
@@ -29,7 +30,7 @@ export const removeFavorite = async (
       id: user.id,
       data: {
         favorites: [
-          ...user.favorites?.filter(item => item !== word)!,
+          ...favorites?.filter(item => item.id !== word)!,
         ]
       }
     })

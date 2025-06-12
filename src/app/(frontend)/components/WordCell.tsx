@@ -3,8 +3,6 @@ import config from '@payload-config'
 import type { Vowel, Word } from '@/payload-types'
 import Link from 'next/link'
 import { Motion } from '@/components/Motion'
-import { Star } from 'lucide-react'
-import { addFavorite } from '@/app/(frontend)/word/actions/addFavorite'
 import {AddFavorite} from '@/app/(frontend)/word/actions/components/AddFavorite'
 import { RemoveFavorite } from '@/app/(frontend)/word/actions/components/RemoveFavorite'
 
@@ -21,6 +19,7 @@ export const WordCell = async ({
 }) => {
   const payload = await getPayload({ config })
   const homonyms = targetWord.homonyms?.map((word) => typeof word !== 'string' && word.word)
+
 
   const rhyme = await payload
     .find({
@@ -49,12 +48,18 @@ export const WordCell = async ({
 
   return rhyme.length > 0 ? (
     <div className={`flex flex-wrap my-4 gap-2 justify-start text-violet-950 dark:text-violet-200`}>
-      {rhyme.map(({ word, slug, id }, index) => (
-        <Motion className={`chips flex gap-4 items-center`} index={index} key={id}>
-          <Link href={`/word/${slug}`}>{word}</Link>
-          {!favorites?.includes(word) ? <AddFavorite favorites={favorites} word={word} /> : <RemoveFavorite word={word} favorites={favorites} /> }
-        </Motion>
-      ))}
+      {rhyme.map(({ id, slug, word }, index) => {
+        return (
+          <Motion className={`chips flex gap-2 items-center`} index={index} key={id}>
+            <Link className={'border-r-1 border-r-violet-400/50 pr-4'} href={`/word/${slug}`}>{word}</Link>
+            {!favorites?.includes(id) ? (
+              <AddFavorite word={id} />
+            ) : (
+              <RemoveFavorite word={id} />
+            )}
+          </Motion>
+        )
+      })}
     </div>
   ) : (
     <p className={`text-md py-0 my-2`}>No words found</p>

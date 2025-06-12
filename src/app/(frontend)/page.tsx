@@ -44,7 +44,7 @@ export default function Page() {
               aria-disabled={!searchWord}
               className={`aria-disabled:bg-violet-950/30 aria-disabled:dark:bg-violet-50/30 aria-disabled:cursor-not-allowed cursor-pointer aria-disabled:pointer-events-none dark:bg-violet-50 dark:text-violet-950 bg-violet-950 text-violet-50 px-2 py-1 rounded-md`}
               role={'button'}
-              href={`/search/${searchWord.toLowerCase()}`}
+              href={`/(.)search/${searchWord.toLowerCase()}`}
             >
               SEARCH
             </Link>

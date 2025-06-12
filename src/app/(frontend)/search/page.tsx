@@ -4,7 +4,6 @@ import {getPayload} from 'payload'
 import React, {Fragment} from 'react'
 import {Search} from '@/collections/search/Component'
 import Link from "next/link";
-import { Word } from '@/payload-types'
 
 type Args = {
   searchParams: Promise<{
@@ -13,7 +12,7 @@ type Args = {
   }>
 }
 export default async function Page({searchParams: searchParamsPromise}: Args) {
-  const {q: query, p: page} = await searchParamsPromise
+  const {q: query} = await searchParamsPromise
   const payload = await getPayload({config: configPromise})
 
   const words = await payload.find({

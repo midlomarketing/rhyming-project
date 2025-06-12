@@ -2,7 +2,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import Link from 'next/link'
 import { SyllableBox } from '@/app/(frontend)/components/SyllableBox'
-import { Vowel } from '@/payload-types'
+import { Vowel, Word as WordProps } from '@/payload-types'
 import { WordCell } from '@/app/(frontend)/components/WordCell'
 import React, { cache } from 'react'
 import { PronunciationBox } from '@/app/(frontend)/components/PronunciationBox'
@@ -12,6 +12,8 @@ import { RequestForm } from '@/components/RequestForm/Component'
 import {Customer} from '@/payload-types'
 import { getUser } from '@/app/(frontend)/(auth)/actions/getUser'
 import { Star } from 'lucide-react'
+import { RemoveFavorite } from '@/app/(frontend)/word/actions/components/RemoveFavorite'
+import { AddFavorite } from '@/app/(frontend)/word/actions/components/AddFavorite'
 
 type Args = {
   params: Promise<{
@@ -24,7 +26,9 @@ export default async function Word({ params: paramsPromise }: Args) {
   const user = await getUser() as Customer
 
   const targetWord = await queryWordBySlug({ slug: slug || `` })
-  const isFavorite = user.favorites?.includes(targetWord.word)
+  const favorites = user.favorites as WordProps[]
+  const favoritesIds = favorites.map(fav => fav.id)
+  const isFavorite = favoritesIds.includes(targetWord.id)
 
   const definitions = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${slug}`).then(
     (res) => res.json(),
@@ -47,7 +51,8 @@ export default async function Word({ params: paramsPromise }: Args) {
                 >
                   {targetWord.word}
                 </span>
-                <Star className={`h-8 w-8 ${!isFavorite ? 'stroke-amber-700' : 'fill-amber-700 stroke-none'}`} />
+                {isFavorite ? <RemoveFavorite word={targetWord.id} />
+                 : <AddFavorite word={targetWord.id} /> }
               </h1>
               <div>
                 <div className={`mt-8`}>
@@ -72,7 +77,7 @@ export default async function Word({ params: paramsPromise }: Args) {
                                 syllable={syllable.vowelSounds}
                                 targetWord={targetWord}
                                 vowelSound={syllable.vowelSounds.value}
-                                favorites={user.favorites!}
+                                favorites={favorites?.map(faves => faves.id)}
                               />
                             )}
                           </div>
